@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import pickle
+import joblib   # ✅ بدل pickle
 import os
 
 app = Flask(__name__)
@@ -8,8 +8,9 @@ CORS(app)
 
 base_dir = os.path.dirname(__file__)
 
-# تحميل الموديل
-model = pickle.load(open(os.path.join(base_dir, "spam_model.pkl"), "rb"))
+# ✅ تحميل الموديل صح
+model_path = os.path.join(base_dir, "spam_model.pkl")
+model = joblib.load(model_path)
 
 @app.route('/')
 def home():
@@ -19,10 +20,10 @@ def home():
 def predict():
     data = request.get_json()
 
-    text = data.get('message')
-
-    if not text:
+    if not data or 'message' not in data:
         return jsonify({"error": "No message provided"}), 400
+
+    text = data['message']
 
     pred = model.predict([text])[0]
 
