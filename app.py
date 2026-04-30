@@ -9,7 +9,7 @@ CORS(app)
 base_dir = os.path.dirname(__file__)
 
 # تحميل الموديل
-model = pickle.load(open(os.path.join(base_dir, "model.pkl"), "rb"))
+model = pickle.load(open(os.path.join(base_dir, "spam_model.pkl"), "rb"))
 
 @app.route('/')
 def home():
