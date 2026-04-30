@@ -1,24 +1,34 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import pickle
+import os
 
 app = Flask(__name__)
-
-import os
+CORS(app)
 
 base_dir = os.path.dirname(__file__)
 
 model = pickle.load(open(os.path.join(base_dir, "model.pkl"), "rb"))
-vectorizer = pickle.load(open(os.path.join(base_dir, "vectorizer.pkl"), "rb"))
+
+@app.route('/')
+def home():
+    return "Server is working 🚀"
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    text = request.json['text']
-    vec = vectorizer.transform([text])
-    pred = model.predict(vec)[0]
+    data = request.get_json()
+
+    text = data.get('message')  # ✔️ مهم
+
+    pred = model.predict([text])[0]
 
     return jsonify({
         "result": "spam" if pred == 1 else "safe"
     })
 
+@app.route("/ping")
+def ping():
+    return "ok", 200
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=10000)
