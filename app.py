@@ -8,6 +8,7 @@ CORS(app)
 
 base_dir = os.path.dirname(__file__)
 
+# تحميل الموديل
 model = pickle.load(open(os.path.join(base_dir, "model.pkl"), "rb"))
 
 @app.route('/')
@@ -18,7 +19,10 @@ def home():
 def predict():
     data = request.get_json()
 
-    text = data.get('message')  # ✔️ مهم
+    text = data.get('message')
+
+    if not text:
+        return jsonify({"error": "No message provided"}), 400
 
     pred = model.predict([text])[0]
 
