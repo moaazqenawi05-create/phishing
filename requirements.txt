@@ -1,9 +1,0 @@
-flask
-flask-cors
-scikit-learn==1.6.1
-numpy
-scipy
-joblib
-pandas
-gunicorn
-waitress
